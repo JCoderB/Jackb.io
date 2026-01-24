@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal - Jack B.</title>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      .password-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #0a0a0a;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      .password-overlay.hidden {
+        display: none;
+      }
+      .password-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .password-form h2 {
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+      .password-form input {
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #333;
+        border-radius: 8px;
+        background: #1a1a1a;
+        color: #fff;
+        width: 250px;
+        text-align: center;
+      }
+      .password-form input:focus {
+        outline: none;
+        border-color: #666;
+      }
+      .password-form button {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        background: #333;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .password-form button:hover {
+        background: #444;
+      }
+      .password-error {
+        color: #ff6b6b;
+        font-size: 0.9rem;
+        min-height: 1.5rem;
+      }
+      .protected-content {
+        display: none;
+      }
+      .protected-content.unlocked {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow"></div>
+
+    <div id="passwordOverlay" class="password-overlay">
+      <div class="password-form">
+        <h2>This page is protected</h2>
+        <input type="password" id="passwordInput" placeholder="Enter password" autocomplete="off" />
+        <button onclick="checkPassword()">Enter</button>
+        <p id="passwordError" class="password-error"></p>
+      </div>
+    </div>
+
+    <main class="page-container protected-content" id="protectedContent">
+      <a href="index.html" class="back-link">Back</a>
+
+      <h1 class="page-title">Personal</h1>
+      <p class="page-subtitle">A bit about me</p>
+
+      <div class="content">
+        <div class="placeholder-card">
+          <p>Content coming soon...</p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const CORRECT_PASSWORD = 'JOAT';
+
+      function checkPassword() {
+        const input = document.getElementById('passwordInput');
+        const error = document.getElementById('passwordError');
+
+        if (input.value === CORRECT_PASSWORD) {
+          sessionStorage.setItem('personalPageAuth', 'true');
+          unlockPage();
+        } else {
+          error.textContent = 'Incorrect password';
+          input.value = '';
+          input.focus();
+        }
+      }
+
+      function unlockPage() {
+        document.getElementById('passwordOverlay').classList.add('hidden');
+        document.getElementById('protectedContent').classList.add('unlocked');
+      }
+
+      // Check if already authenticated this session
+      if (sessionStorage.getItem('personalPageAuth') === 'true') {
+        unlockPage();
+      }
+
+      // Allow Enter key to submit
+      document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          checkPassword();
+        }
+      });
+    </script>
+  </body>
+</html>
