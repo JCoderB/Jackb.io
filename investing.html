@@ -5,9 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>The Liberal Arts in Investing - Jack B.</title>
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      (function() {
+        const saved = localStorage.getItem('theme') || 'thematic';
+        document.documentElement.setAttribute('data-theme', saved);
+      })();
+    </script>
   </head>
   <body>
     <div class="glow"></div>
+
+    <div class="theme-toggle">
+      <button onclick="toggleTheme()" id="themeBtn">Classic</button>
+    </div>
 
     <main class="page-container">
       <a href="index.html" class="back-link">Back</a>
@@ -21,5 +31,23 @@
         </div>
       </div>
     </main>
+
+    <script>
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const next = current === 'thematic' ? 'classic' : 'thematic';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateButtonText();
+      }
+
+      function updateButtonText() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const btn = document.getElementById('themeBtn');
+        btn.textContent = current === 'thematic' ? 'Classic' : 'Thematic';
+      }
+
+      updateButtonText();
+    </script>
   </body>
 </html>

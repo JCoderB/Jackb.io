@@ -5,9 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Jack B.</title>
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      // Apply saved theme immediately to prevent flash
+      (function() {
+        const saved = localStorage.getItem('theme') || 'thematic';
+        document.documentElement.setAttribute('data-theme', saved);
+      })();
+    </script>
   </head>
   <body>
     <div class="glow"></div>
+
+    <div class="theme-toggle">
+      <button onclick="toggleTheme()" id="themeBtn">Classic</button>
+    </div>
 
     <main class="home-container">
       <h1 class="title">Jack B.</h1>
@@ -17,5 +28,23 @@
         <a href="personal.html" class="nav-link">Personal</a>
       </nav>
     </main>
+
+    <script>
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const next = current === 'thematic' ? 'classic' : 'thematic';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateButtonText();
+      }
+
+      function updateButtonText() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const btn = document.getElementById('themeBtn');
+        btn.textContent = current === 'thematic' ? 'Classic' : 'Thematic';
+      }
+
+      updateButtonText();
+    </script>
   </body>
 </html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resources - Jack B.</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script>
+      (function() {
+        const saved = localStorage.getItem('theme') || 'thematic';
+        document.documentElement.setAttribute('data-theme', saved);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="glow"></div>
+
+    <div class="theme-toggle">
+      <button onclick="toggleTheme()" id="themeBtn">Classic</button>
+    </div>
+
+    <main class="page-container">
+      <a href="personal.html" class="back-link">Back to Personal</a>
+
+      <h1 class="page-title">Resources</h1>
+      <p class="page-subtitle">Books, podcasts, and websites I recommend</p>
+
+      <div class="content">
+        <section class="resource-section">
+          <h2 class="section-title">Books</h2>
+          <div class="bookshelf">
+            <div class="bookshelf-books" id="booksList"></div>
+            <div class="bookshelf-wood"></div>
+          </div>
+          <p class="resource-others" id="booksOthers"></p>
+        </section>
+
+        <section class="resource-section">
+          <h2 class="section-title">Podcasts</h2>
+          <div id="podcastsList" class="resource-list"></div>
+          <p class="resource-others" id="podcastsOthers"></p>
+        </section>
+
+        <section class="resource-section">
+          <h2 class="section-title">Websites & Newsletters</h2>
+          <div id="websitesList" class="resource-list"></div>
+        </section>
+
+        <section class="resource-section resource-note">
+          <p>Any suggestions? Let me know! I'm always looking for high quality resources across fields.</p>
+        </section>
+      </div>
+    </main>
+
+    <script>
+      const books = [
+        { title: "Range", author: "David Epstein", notes: "The benefits of being a generalist" },
+        { title: "More Money Than God", author: "Sebastian Mallaby", notes: "History of the hedge fund industry" },
+        { title: "Power Law", author: "Sebastian Mallaby", notes: "History of the venture capital industry" },
+        { title: "The Lessons of History", author: "Will & Ariel Durant", notes: "Themes and lessons from human history" },
+        { title: "When Genius Failed", author: "Roger Lowenstein", notes: "Captivating case study on a failed hedge fund" },
+        { title: "The Big Short / Liar's Poker", author: "Michael Lewis", notes: "Details the 2008 financial crisis / 1980s Wall St." },
+        { title: "1929", author: "Andrew Ross Sorkin", notes: "Details the 1929 stock market crash" },
+        { title: "Superforecasting", author: "Philip Tetlock, Dan Gardner", notes: "Improving prediction accuracy" },
+        { title: "The Outsiders", author: "William Thorndike", notes: "Case studies of unconventional, successful CEOs" },
+        { title: "Investing: The Last Liberal Art", author: "Robert Hagstrom", notes: "Interdisciplinary approaches to investing" }
+      ];
+
+      const booksOthers = "Pioneering Portfolio Management, The Psychology of Money, Endurance, Chip War, Apple in China, The Greatest Trade Ever, Black Edge, Billion Dollar Whale, Bad Blood, The Man Who Solved the Market, The Intelligent Investor, The Innovator's Dilemma, Fortune's Formula, Thinking Fast and Slow, Zero to One, 7 Powers, and many others...";
+
+      const podcasts = [
+        { title: "Invest Like the Best", host: "Patrick O'Shaughnessy", notes: "Broad investing and other top thinkers" },
+        { title: "The Joys of Compounding", host: "Rick Buhrman, Paul Buser", notes: "Broad investing and other top thinkers" },
+        { title: "Capital Allocators", host: "Ted Seides", notes: "LP investing (endowments, foundations, etc.)" },
+        { title: "In Good Company", host: "Nicolai Tangen", notes: "Interviews with top CEOs and others" },
+        { title: "Founders", host: "David Senra", notes: "Biographies" },
+        { title: "Conversations with Tyler", host: "Tyler Cowen", notes: "Broad topics hosted by an economist" },
+        { title: "20VC", host: "Harry Stebbings", notes: "Interviews with VCs and others in tech" },
+        { title: "Sourcery", host: "Molly O'Shea", notes: "Interviews across tech leaders and others" },
+        { title: "Acquired", host: "Ben Gilbert, David Rosenthal", notes: "Deep dives on businesses" },
+        { title: "Dwarkesh Podcast", host: "Dwarkesh Patel", notes: "Deeply researched podcasts across subjects" }
+      ];
+
+      const podcastsOthers = "TBPN (daily tech news), Uncapped (VC), Cheeky Pint (tech/broad), How to Take Over the World (historical bios), The Knowledge Project (broad), Crucible Moments (VC), On the Brink (crypto), 50X (business deep dives), BG2 (tech)";
+
+      const websites = [
+        { name: "AI Resources", notes: "ChatGPT, Claude, Gemini, Notebook LM, Perplexity, Grok, etc." },
+        { name: "General News Sites / Newsletters", notes: "NY Times, Wall Street Journal, Financial Times, Economist, Axios, etc." },
+        { name: "Finviz", notes: "Public markets daily performance & screener" },
+        { name: "Koyfin", notes: "Free Bloomberg alternative" },
+        { name: "X (f.k.a. Twitter)", notes: "Curate lists based on topic (stocks, VC, tech, etc.)" },
+        { name: "YouTube", notes: "Watch lectures, topic deep dives, interviews, etc." },
+        { name: "Axios Pro Rata + Fortune Term Sheet", notes: "Daily email on private market news (VC, PE, etc.)" },
+        { name: "Exec Sum", notes: "Daily email on markets and news, with meme content" },
+        { name: "Value Investors Club", notes: "Stock pitch write-ups" },
+        { name: "Kindros", notes: "Free platform to learn about personal financial literacy" },
+        { name: "In-Person / Real World", notes: "Talk with others! Friends, family, strangers - people of all backgrounds", highlight: true }
+      ];
+
+      // Book spine colors - earthy, library-inspired palette
+      const spineColors = [
+        { bg: '#8B4513', text: '#F5DEB3' }, // Saddle brown
+        { bg: '#2F4F4F', text: '#E0E0E0' }, // Dark slate
+        { bg: '#800020', text: '#F5E6C8' }, // Burgundy
+        { bg: '#1a3a1a', text: '#C8D8C8' }, // Forest green
+        { bg: '#4A4A6A', text: '#E8E8F0' }, // Muted navy
+        { bg: '#5D4037', text: '#EFEBE9' }, // Brown
+        { bg: '#37474F', text: '#ECEFF1' }, // Blue grey
+        { bg: '#6D4C41', text: '#D7CCC8' }, // Coffee
+        { bg: '#4E342E', text: '#EFEBE9' }, // Dark brown
+        { bg: '#3E2723', text: '#D7CCC8' }, // Deep brown
+      ];
+
+      function renderBooks() {
+        const container = document.getElementById('booksList');
+        container.innerHTML = books.map((book, i) => {
+          const color = spineColors[i % spineColors.length];
+          // Vary width slightly based on title length
+          const width = Math.min(Math.max(book.title.length * 2.5, 35), 70);
+          return `
+            <div class="book-spine" style="--spine-bg: ${color.bg}; --spine-text: ${color.text}; --spine-width: ${width}px;">
+              <div class="book-spine-title">${book.title}</div>
+              <div class="book-tooltip">
+                <div class="book-tooltip-title">${book.title}</div>
+                <div class="book-tooltip-author">${book.author}</div>
+                <div class="book-tooltip-notes">${book.notes}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('booksOthers').innerHTML = `<strong>Other:</strong> ${booksOthers}`;
+      }
+
+      function renderPodcasts() {
+        const container = document.getElementById('podcastsList');
+        container.innerHTML = podcasts.map(podcast => `
+          <div class="resource-item">
+            <div class="resource-title">${podcast.title}</div>
+            <div class="resource-meta">${podcast.host}</div>
+            <div class="resource-notes">${podcast.notes}</div>
+          </div>
+        `).join('');
+        document.getElementById('podcastsOthers').innerHTML = `<strong>Other:</strong> ${podcastsOthers}`;
+      }
+
+      function renderWebsites() {
+        const container = document.getElementById('websitesList');
+        container.innerHTML = websites.map(site => `
+          <div class="resource-item ${site.highlight ? 'resource-highlight' : ''}">
+            <div class="resource-title">${site.name}</div>
+            <div class="resource-notes">${site.notes}</div>
+          </div>
+        `).join('');
+      }
+
+      renderBooks();
+      renderPodcasts();
+      renderWebsites();
+
+      // Theme toggle
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const next = current === 'thematic' ? 'classic' : 'thematic';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateButtonText();
+      }
+
+      function updateButtonText() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const btn = document.getElementById('themeBtn');
+        btn.textContent = current === 'thematic' ? 'Classic' : 'Thematic';
+      }
+
+      updateButtonText();
+    </script>
+  </body>
+</html>

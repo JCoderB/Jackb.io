@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Personal - Jack B.</title>
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      (function() {
+        const saved = localStorage.getItem('theme') || 'thematic';
+        document.documentElement.setAttribute('data-theme', saved);
+      })();
+    </script>
     <style>
       .password-overlay {
         position: fixed;
@@ -12,7 +18,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: #0a0a0a;
+        background: var(--bg-dark);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -29,36 +35,40 @@
         gap: 1rem;
       }
       .password-form h2 {
-        color: #fff;
+        font-family: var(--font-heading);
+        color: var(--text-primary);
         font-size: 1.5rem;
         margin-bottom: 0.5rem;
       }
       .password-form input {
+        font-family: var(--font-body);
         padding: 0.75rem 1rem;
         font-size: 1rem;
-        border: 1px solid #333;
-        border-radius: 8px;
-        background: #1a1a1a;
-        color: #fff;
+        border: 1px solid var(--wood-light);
+        border-radius: var(--border-radius);
+        background: var(--bg-card);
+        color: var(--text-primary);
         width: 250px;
         text-align: center;
       }
       .password-form input:focus {
         outline: none;
-        border-color: #666;
+        border-color: var(--amber);
       }
       .password-form button {
+        font-family: var(--font-body);
         padding: 0.75rem 2rem;
         font-size: 1rem;
-        border: none;
-        border-radius: 8px;
-        background: #333;
-        color: #fff;
+        border: 1px solid var(--wood-light);
+        border-radius: var(--border-radius);
+        background: var(--bg-card);
+        color: var(--text-primary);
         cursor: pointer;
-        transition: background 0.2s;
+        transition: all 0.2s;
       }
       .password-form button:hover {
-        background: #444;
+        border-color: var(--amber);
+        color: var(--amber);
       }
       .password-error {
         color: #ff6b6b;
@@ -76,6 +86,10 @@
   <body>
     <div class="glow"></div>
 
+    <div class="theme-toggle">
+      <button onclick="toggleTheme()" id="themeBtn">Classic</button>
+    </div>
+
     <div id="passwordOverlay" class="password-overlay">
       <div class="password-form">
         <h2>This page is protected</h2>
@@ -92,9 +106,9 @@
       <p class="page-subtitle">A bit about me</p>
 
       <div class="content">
-        <div class="placeholder-card">
-          <p>Content coming soon...</p>
-        </div>
+        <nav class="page-links">
+          <a href="resources.html" class="page-link">Resources</a>
+        </nav>
       </div>
     </main>
 
@@ -131,6 +145,23 @@
           checkPassword();
         }
       });
+
+      // Theme toggle
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const next = current === 'thematic' ? 'classic' : 'thematic';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+        updateButtonText();
+      }
+
+      function updateButtonText() {
+        const current = document.documentElement.getAttribute('data-theme') || 'thematic';
+        const btn = document.getElementById('themeBtn');
+        btn.textContent = current === 'thematic' ? 'Classic' : 'Thematic';
+      }
+
+      updateButtonText();
     </script>
   </body>
 </html>
